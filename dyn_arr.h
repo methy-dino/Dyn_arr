@@ -16,6 +16,9 @@ void grow_darr(Dyn_arr* darr, size_t inc);
 Dyn_arr* init_arr(void* init_vals, size_t init_quan, size_t val_size);
 /* creates a dyn_arr with spare space, copying bytes from init_vals */
 Dyn_arr* build_arr(void* init_vals, size_t init_quan, size_t val_size);
+/* puts element at the end of 'arr', checking if it needs to grow to fit that data */
 void arr_add(Dyn_arr* arr, void* element);
+void arr_add_at(Dyn_arr* arr, void* element, size_t index);
+/* removes the element at index, reducing index of things higher than it. */
 void arr_remove(Dyn_arr* arr, size_t index);
 char* arr_get(Dyn_arr* arr, size_t index);

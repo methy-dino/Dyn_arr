@@ -36,12 +36,21 @@ Dyn_arr* build_arr(void* init_vals, size_t init_quan, size_t val_size){
 	memcpy(ret->arr, init_vals, init_quan * val_size);
 	return ret;
 }
+/* puts element at the end of 'arr', checking if it needs to grow to fit that data */
 void arr_add(Dyn_arr* arr, void* element){
 	if (arr->length == arr->capacity){
 		grow_darr(arr, arr->length / 2);
 	}
 	memcpy(&arr->arr[arr->length * arr->element_size], element, arr->element_size);
 }
+void arr_add_at(Dyn_arr* arr, void* element, size_t index){
+	if (arr->length == arr->capacity){
+		grow_darr(arr, arr->length / 2);
+	}
+	memcpy(&arr->arr[(index+1) * arr->element_size], &arr->arr[index*arr->element_size], arr->length - index);
+	memcpy(&arr->arr[index * arr->element_size], element, arr->element_size);
+}
+/* removes the element at index, reducing index of things higher than it. */
 void arr_remove(Dyn_arr* arr, size_t index){
 	memcpy(&arr->arr[index * arr->element_size], &arr->arr[(index+1) * arr->element_size], (arr->length - index) * arr->element_size); 
 	arr->length--;
