@@ -22,3 +22,4 @@ void arr_add_at(Dyn_arr* arr, void* element, size_t index);
 /* removes the element at index, reducing index of things higher than it. */
 void arr_remove(Dyn_arr* arr, size_t index);
 char* arr_get(Dyn_arr* arr, size_t index);
+size_t arr_find(Dyn_arr* arr, void* element);

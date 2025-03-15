@@ -58,3 +58,16 @@ void arr_remove(Dyn_arr* arr, size_t index){
 char* arr_get(Dyn_arr* arr, size_t index){
 	return &(arr->arr[index * arr->element_size]);
 }
+
+size_t arr_find(Dyn_arr* arr, void* element){
+	size_t i = 0;
+	size_t byte_len = arr->length * arr->element_size;
+	while (i < byte_len){
+		//adding saves some time instead of multiplying.
+		i += arr->len;
+		if (memcmp(&arr->arr[i], element, arr->element_size) == 0){
+		return i / arr->element_size;
+		}
+	}
+	return -1;
+}
