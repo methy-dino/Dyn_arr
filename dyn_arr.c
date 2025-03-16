@@ -81,6 +81,13 @@ size_t arr_find(Dyn_arr* arr, void* element){
 	}
 	return -1;
 }
+size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
+	for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
+  	if (is_equal(target,&(arr->arr[i])) == 0){
+			return i / arr->element_size;
+		}
+  }
+}
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg)){
     if (func){
         for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
@@ -90,4 +97,3 @@ void arr_discard(Dyn_arr* arr, void(*func)(void* arg)){
     free(arr->arr);
     free(arr);
 }
-

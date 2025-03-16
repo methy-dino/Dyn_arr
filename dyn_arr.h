@@ -2,6 +2,7 @@
 #pragma once
 #include<stdlib.h> // malloc, free and size_t.
 #include<string.h> //memcpy
+#include<stdio.h>
 typedef struct arr {
 	// sizeof(char) == 1, can get to any byte using chars.
 	char* arr; 
@@ -9,6 +10,7 @@ typedef struct arr {
 	size_t length;
 	size_t capacity;
 } Dyn_arr;
+char* arr_get(Dyn_arr* arr, size_t index);
 void grow_darr(Dyn_arr* darr, size_t inc);
 /* creates a dyn_arr with the provided bytes and lengths; 
  * beware that memory must be allocated since the grow method calls free()
@@ -22,6 +24,6 @@ void arr_add(Dyn_arr* arr, void* element);
 void arr_add_at(Dyn_arr* arr, void* element, size_t index);
 /* removes the element at index, reducing index of things higher than it. */
 void arr_remove(Dyn_arr* arr, size_t index);
-char* arr_get(Dyn_arr* arr, size_t index);
 size_t arr_find(Dyn_arr* arr, void* element);
+size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b));
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg));
