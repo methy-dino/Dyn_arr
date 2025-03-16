@@ -1,6 +1,13 @@
 #include<stdio.h>
 #include"dyn_arr.h"
 #include<assert.h>
+int int_ptr_equal(void* int_a, void* int_b){
+	if (**((int**)int_a) == **((int**)int_b)){
+		return 0;
+	}
+	return 1;
+}
+
 void free_int(void* intptr){
     //printf("called");
     //printf("returned: %d\n", *(int*)intptr);
@@ -31,13 +38,17 @@ int index_tests(){
 		}
 	printf("I T3 PASS\n");
     int* c = malloc(sizeof(int));
-    int* d = malloc(sizeof(int));   
-    *c = 98;
-    *d = 8;    
+    int* d = malloc(sizeof(int));
+		int* d_match = malloc(sizeof(int));  
+		*c = 98;
+    *d = 8;
+		*d_match = 8;
     Dyn_arr* del = empty_arr(3,sizeof(int*));
     arr_add(del, &c);
     arr_add(del, &d);
-    arr_discard(del, &free_int);
+		assert(arr_seek(del, &d_match, &int_ptr_equal) == 1);
     printf("I T4 PASS\n");
+		arr_discard(del, &free_int);
+    printf("I T5 PASS\n");
 	return 0;
 }
