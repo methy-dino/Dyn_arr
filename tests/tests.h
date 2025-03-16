@@ -3,4 +3,5 @@
 #include<stdio.h>
 #include"dyn_arr.h"
 #include<assert.h>
+void free_int(void* intptr);
 int index_tests();
