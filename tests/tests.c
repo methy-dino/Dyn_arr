@@ -48,7 +48,10 @@ int index_tests(){
     arr_add(del, &d);
 		assert(arr_seek(del, &d_match, &int_ptr_equal) == 1);
     printf("I T4 PASS\n");
+		*d_match = 9;
+		assert(arr_seek(del, &d_match, &int_ptr_equal) == -1);
+		printf("I T5 PASS\n");
 		arr_discard(del, &free_int);
-    printf("I T5 PASS\n");
+    printf("I T6 PASS\n");
 	return 0;
 }

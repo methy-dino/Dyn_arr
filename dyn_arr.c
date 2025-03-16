@@ -87,6 +87,7 @@ size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
 			return i / arr->element_size;
 		}
   }
+	return -1;
 }
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg)){
     if (func){
