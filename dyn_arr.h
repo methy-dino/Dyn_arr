@@ -27,3 +27,4 @@ void arr_remove(Dyn_arr* arr, size_t index);
 size_t arr_find(Dyn_arr* arr, void* element);
 size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b));
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg));
+void arr_print(Dyn_arr* arr, void (printer)(void*));

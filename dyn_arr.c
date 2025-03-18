@@ -98,3 +98,15 @@ void arr_discard(Dyn_arr* arr, void(*func)(void* arg)){
     free(arr->arr);
     free(arr);
 }
+void arr_print(Dyn_arr* arr, void (printer)(void*)){	
+	printf("data of array at: %p \n length is %u and capacity is %u, elements occupy %u bytes.\n", (void*) arr, arr->length, arr->capacity, arr->element_size);
+	if (printer){
+		printf("data of it's contents at: %p\n [", arr->arr);
+		for (size_t i = 0; i < (arr->length-1)*arr->element_size; i+= arr->element_size){
+    	printer(arr->arr + i);
+			printf(", ");
+  	}
+		printer(arr->arr + arr->length * arr->element_size);
+		printf("]\n");
+	}
+}
