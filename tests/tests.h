@@ -4,5 +4,6 @@
 #include"dyn_arr.h"
 #include<assert.h>
 int int_ptr_equal(void* int_a, void* int_b);
+void int_print(void* num);
 void free_int(void* intptr);
 int index_tests();
