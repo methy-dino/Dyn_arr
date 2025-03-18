@@ -52,20 +52,20 @@ void arr_add(Dyn_arr* arr, void* element){
 	if (arr->length == arr->capacity){
 		grow_darr(arr, arr->capacity / 2);
 	}
-	memcpy(&(arr->arr[arr->length * arr->element_size]), element, arr->element_size);
+	memcpy(arr->arr + arr->length * arr->element_size, element, arr->element_size);
     arr->length++;
 }
 void arr_add_at(Dyn_arr* arr, void* element, size_t index){
 	if (arr->length == arr->capacity){
 		grow_darr(arr, arr->length / 2);
 	}
-	memcpy(&arr->arr[(index+1) * arr->element_size], &arr->arr[index * arr->element_size], (arr->length - index) * arr->element_size);
-	memcpy(&arr->arr[index * arr->element_size], element, arr->element_size);
+	memcpy(arr->arr + (index+1) * arr->element_size, arr->arr + index * arr->element_size , (arr->length - index) * arr->element_size);
+	memcpy(arr->arr +index * arr->element_size, element, arr->element_size);
     arr->length++;
 }
 /* removes the element at index, reducing index of things higher than it. */
 void arr_remove(Dyn_arr* arr, size_t index){
-	memcpy(&arr->arr[index * arr->element_size], &arr->arr[(index+1) * arr->element_size], (arr->length - index) * arr->element_size); 
+	memcpy(arr->arr +index * arr->element_size, arr->arr + (index+1) * arr->element_size, (arr->length - index) * arr->element_size); 
 	arr->length--;
 }
 
@@ -83,7 +83,7 @@ size_t arr_find(Dyn_arr* arr, void* element){
 }
 size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
 	for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
-  	if (is_equal(target,&(arr->arr[i])) == 0){
+  	if (is_equal(target, arr->arr + i) == 0){
 			return i / arr->element_size;
 		}
   }
@@ -92,7 +92,7 @@ size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg)){
     if (func){
         for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
-            func(&(arr->arr[i]));
+            func(arr->arr + i);
         }
     }
     free(arr->arr);
