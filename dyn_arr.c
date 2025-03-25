@@ -69,24 +69,20 @@ void arr_remove(Dyn_arr* arr, size_t index){
 	arr->length--;
 }
 
-size_t arr_find(Dyn_arr* arr, void* element){
-	size_t i = 0;
-	size_t byte_len = arr->length * arr->element_size;
-	while (i < byte_len){
-		//adding saves some time instead of multiplying.
-		i += arr->length;
-		if (memcmp(&arr->arr[i], element, arr->element_size) == 0){
-		return i / arr->element_size;
+size_t arr_find(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
+	if (is_equal != NULL){
+		for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
+  		if (is_equal(target, arr->arr + i) == 0){
+				return i / arr->element_size;
+			}
+  	}
+	} else {
+		for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
+			if (memcmp(arr->arr + i, target, arr->element_size) == 0){
+				return i / arr->element_size;
+			}
 		}
 	}
-	return -1;
-}
-size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
-	for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
-  	if (is_equal(target, arr->arr + i) == 0){
-			return i / arr->element_size;
-		}
-  }
 	return -1;
 }
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg)){
@@ -109,4 +105,8 @@ void arr_print(Dyn_arr* arr, void (printer)(void*)){
 		printer(arr->arr + arr->length * arr->element_size);
 		printf("]\n");
 	}
+}
+// to be used on arr_print.
+void addressPrint(void* ptr){
+	printf("contents at: %p", ptr);
 }

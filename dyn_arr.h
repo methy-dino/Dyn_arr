@@ -24,7 +24,8 @@ void arr_add(Dyn_arr* arr, void* element);
 void arr_add_at(Dyn_arr* arr, void* element, size_t index);
 /* removes the element at index, reducing index of things higher than it. */
 void arr_remove(Dyn_arr* arr, size_t index);
-size_t arr_find(Dyn_arr* arr, void* element);
-size_t arr_seek(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b));
+size_t arr_find(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b));
 void arr_discard(Dyn_arr* arr, void(*func)(void* arg));
 void arr_print(Dyn_arr* arr, void (printer)(void*));
+// to be used on arr_print.
+void addressPrint(void* ptr);
