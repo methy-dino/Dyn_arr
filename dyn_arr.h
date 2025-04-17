@@ -4,8 +4,6 @@
 #include<string.h> /*memcpy*/
 #include<stdio.h>
 typedef struct arr {
-	/* sizeof(char) == 1, can get to any byte using chars.*/
-	/* sizeof(char) == 1, can get to any byte using chars.*/
 	void* arr; 
 	size_t element_size;
 	size_t length;
@@ -24,12 +22,15 @@ Dyn_arr* empty_arr(size_t init_quan, size_t val_size, void (*freefn)(void*));
 /* puts element at the end of 'arr', checking if it needs to grow to fit that data */
 void arr_add(Dyn_arr* arr, void* element);
 void arr_add_at(Dyn_arr* arr, void* element, size_t index);
-/* removes the element at index, reducing index of things higher than it. */
+/* removes the element at index, reducing index of things higher than it, also tries to free memory associated to the index, if arr has free() defined. */
 void arr_remove(Dyn_arr* arr, size_t index);
 /* removes an element from the array, and returns it. */
 void* arr_fetch(Dyn_arr* arr, size_t index);
+/* linear searh looking for an equal element, using is_equal, which should return 0 on equality */
 size_t arr_find(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b));
+/*tries to discard the array, clearing elements in the process if the array was built with a free function.*/
 void arr_discard(Dyn_arr* arr);
+/* tries to print array, calling the printer() function for each element, if it is specified.*/
 void arr_print(Dyn_arr* arr, void (printer)(void*));
 /* to be used on arr_print.*/
 void addressPrint(void* ptr);
