@@ -17,13 +17,13 @@ void free_int(void* intptr){
 }
 int index_tests(){
 	int test[4] = {213, 543, 7569, 18932};
-	Dyn_arr* arr = build_arr(test, 4, sizeof(int));
+	Dyn_arr* arr = build_arr(test, 4, sizeof(int), NULL);
 	arr_remove(arr, 1);
 	int a = 10;
 	arr_add_at(arr, &a, 2);
 	assert(*(int*)arr_get(arr, 2) == a);
     printf("I T1 PASS\n");
-    arr_remove(arr, arr_find(arr, &a));
+    arr_remove(arr, arr_find(arr, &a, NULL));
     int testcp = 543;
     arr_add_at(arr, &testcp, 1);
     for (size_t i = 0; i < arr->length; i++){
@@ -43,19 +43,19 @@ int index_tests(){
 		*c = 98;
     *d = 8;
 		*d_match = 8;
-    Dyn_arr* del = empty_arr(3,sizeof(int*));
+    Dyn_arr* del = empty_arr(3,sizeof(int*), &free_int);
     arr_add(del, &c);
     arr_add(del, &d);
-		assert(arr_seek(del, &d_match, &int_ptr_equal) == 1);
+		assert(arr_find(del, &d_match, &int_ptr_equal) == 1);
     printf("I T4 PASS\n");
 		*d_match = 9;
-		assert(arr_seek(del, &d_match, &int_ptr_equal) == -1);
+		assert(arr_find(del, &d_match, &int_ptr_equal) == -1);
 		printf("I T5 PASS\n");
-		arr_discard(del, &free_int);
+		arr_discard(del);
     printf("I T6 PASS\n");
 		arr_print(arr, &int_print);
 		printf("I T7 PASS\n");
-		arr_discard(arr, NULL);
+		arr_discard(arr);
 		printf("I T8 PASS\n");
 	return 0;
 }
