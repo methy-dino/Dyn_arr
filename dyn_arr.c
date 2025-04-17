@@ -1,33 +1,30 @@
-#include<stdlib.h> // malloc, free and size_t.
-#include<string.h> //memcpy
+#include<stdlib.h> /* malloc, free and size_t.*/
+#include<string.h> /*memcpy*/
 #include<stdio.h>
 typedef struct arr {
-	// sizeof(char) == 1, can get to any byte using chars.
-	char* arr; 
+	/* sizeof(char) == 1, can get to any byte using chars.*/
+	void* arr; 
 	size_t element_size;
 	size_t length;
 	size_t capacity;
 } Dyn_arr;
 
-char* arr_get(Dyn_arr* arr, size_t index){
-	return &(arr->arr[index * arr->element_size]);
+void* arr_get(Dyn_arr* arr, size_t index){
+	return (void*)(arr->arr +(index * arr->element_size));
 }
 void grow_darr(Dyn_arr* darr, size_t inc){
-	char* n_arr = malloc(darr->element_size * inc + darr->capacity * darr->element_size);
-	memcpy(n_arr, darr->arr, darr->capacity * darr->element_size);
-    darr->capacity = inc + darr->capacity;
-	free(darr->arr);
-	darr->arr = n_arr;
+	darr->capacity = inc + darr->capacity;
+	darr->arr = realloc(darr->arr, darr->element_size * darr->capacity);
 }
-/* creates a dyn_arr with the provided bytes and lengths; 
- * beware that memory must be allocated since the grow method calls free()
+/* creates a dyn_arr with the provided bytes and lengths
+ * beware that memory must be allocated since the grow method calls realloc()
  */
 Dyn_arr* init_arr(void* init_vals, size_t init_quan, size_t val_size){
 	Dyn_arr* ret = malloc(sizeof(Dyn_arr));
 	ret->element_size = val_size;
 	ret->length = init_quan;
 	ret->capacity = init_quan;
-	ret->arr = (char*) init_vals;
+	ret->arr = (void*) init_vals;
 	return ret;
 }
 /* creates a dyn_arr with spare space, copying bytes from init_vals */
@@ -41,10 +38,10 @@ Dyn_arr* build_arr(void* init_vals, size_t init_quan, size_t val_size){
 	return ret;
 }
 Dyn_arr* empty_arr(size_t init_quan, size_t val_size){
-    Dyn_arr* ret = malloc(sizeof(Dyn_arr));
-    ret->arr = malloc(init_quan * val_size);
+  Dyn_arr* ret = malloc(sizeof(Dyn_arr));
+  ret->arr = malloc(init_quan * val_size);
 	ret->element_size = val_size;
-    ret->length = 0;
+  ret->length = 0;
 	ret->capacity = init_quan;
 }
 /* puts element at the end of 'arr', checking if it needs to grow to fit that data */
@@ -106,7 +103,7 @@ void arr_print(Dyn_arr* arr, void (printer)(void*)){
 		printf("]\n");
 	}
 }
-// to be used on arr_print.
+/* to be used on arr_print.*/
 void addressPrint(void* ptr){
 	printf("contents at: %p", ptr);
 }
