@@ -12,15 +12,21 @@ typedef struct arr {
 void* arr_get(Dyn_arr* arr, size_t index){
 	return (arr->arr +(index * arr->element_size));
 }
-void grow_darr(Dyn_arr* darr, size_t inc){
+int grow_darr(Dyn_arr* darr, size_t inc){
 	darr->capacity = inc + darr->capacity;
-	darr->arr = realloc(darr->arr, darr->element_size * darr->capacity);
+	void* tmp = realloc(darr->arr, darr->element_size * darr->capacity);
+	if (tmp == NULL) {
+		return 1;
+	}
+	darr->arr = tmp;
+	return 0;
 }
 /* creates a dyn_arr with the provided bytes and lengths
  * beware that memory must be allocated since the grow method calls realloc()
  */
 Dyn_arr* init_arr(void* init_vals, size_t init_quan, size_t val_size, void (*freefn)(void*)){
 	Dyn_arr* ret = malloc(sizeof(Dyn_arr));
+	if (ret == NULL) return ret;
 	ret->element_size = val_size;
 	ret->length = init_quan;
 	ret->capacity = init_quan;
@@ -31,9 +37,14 @@ Dyn_arr* init_arr(void* init_vals, size_t init_quan, size_t val_size, void (*fre
 /* creates a dyn_arr with spare space, copying bytes from init_vals */
 Dyn_arr* build_arr(void* init_vals, size_t init_quan, size_t val_size, void(*freefn)(void*)){
 	Dyn_arr* ret = malloc(sizeof(Dyn_arr));
+	if (ret == NULL) return ret;
 	ret->capacity = init_quan;
 	ret->free = freefn;
 	ret->arr = malloc(ret->capacity * val_size);
+	if (ret->arr == NULL){ 
+		free(ret);
+		return NULL;
+	}
 	ret->element_size = val_size;
 	ret->length = init_quan;
 	memcpy(ret->arr, init_vals, init_quan * val_size);
@@ -41,6 +52,7 @@ Dyn_arr* build_arr(void* init_vals, size_t init_quan, size_t val_size, void(*fre
 }
 Dyn_arr* empty_arr(size_t init_quan, size_t val_size, void (*freefn)(void*)){
   Dyn_arr* ret = malloc(sizeof(Dyn_arr));
+	if (ret == NULL) return ret;
   ret->arr = malloc(init_quan * val_size);
 	ret->free = freefn;
 	ret->element_size = val_size;
@@ -48,20 +60,27 @@ Dyn_arr* empty_arr(size_t init_quan, size_t val_size, void (*freefn)(void*)){
 	ret->capacity = init_quan;
 }
 /* puts element at the end of 'arr', checking if it needs to grow to fit that data */
-void arr_add(Dyn_arr* arr, void* element){
+int arr_add(Dyn_arr* arr, void* element){
 	if (arr->length == arr->capacity){
-		grow_darr(arr, arr->capacity / 2);
+		if(grow_darr(arr, arr->capacity / 2) == 1){
+			return 1;
+		}
 	}
 	memcpy(arr->arr + arr->length * arr->element_size, element, arr->element_size);
-    arr->length++;
+	arr->length++;
+	return 0;
 }
-void arr_add_at(Dyn_arr* arr, void* element, size_t index){
+int arr_add_at(Dyn_arr* arr, void* element, size_t index){
 	if (arr->length == arr->capacity){
-		grow_darr(arr, arr->length / 2);
+		if(grow_darr(arr, arr->capacity / 2) == 1){
+			return 1;
+		}
 	}
+
 	memcpy(arr->arr + (index+1) * arr->element_size, arr->arr + index * arr->element_size , (arr->length - index) * arr->element_size);
 	memcpy(arr->arr +index * arr->element_size, element, arr->element_size);
-    arr->length++;
+	arr->length++;
+	return 0;
 }
 /* removes the element at index, reducing index of things higher than it, also tries to free memory associated to the index, if arr has free() defined. */
 void arr_remove(Dyn_arr* arr, size_t index){

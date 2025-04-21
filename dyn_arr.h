@@ -11,7 +11,7 @@ typedef struct arr {
 	void (*free)(void*);
 } Dyn_arr;
 void* arr_get(Dyn_arr* arr, size_t index);
-void grow_darr(Dyn_arr* darr, size_t inc);
+int grow_darr(Dyn_arr* darr, size_t inc);
 /* creates a dyn_arr with the provided bytes and lengths
  * beware that memory must be allocated since the grow method calls realloc()
  */
@@ -20,8 +20,8 @@ Dyn_arr* init_arr(void* init_vals, size_t init_quan, size_t val_size, void (*fre
 Dyn_arr* build_arr(void* init_vals, size_t init_quan, size_t val_size, void(*freefn)(void*));
 Dyn_arr* empty_arr(size_t init_quan, size_t val_size, void (*freefn)(void*));
 /* puts element at the end of 'arr', checking if it needs to grow to fit that data */
-void arr_add(Dyn_arr* arr, void* element);
-void arr_add_at(Dyn_arr* arr, void* element, size_t index);
+int arr_add(Dyn_arr* arr, void* element);
+int arr_add_at(Dyn_arr* arr, void* element, size_t index);
 /* removes the element at index, reducing index of things higher than it, also tries to free memory associated to the index, if arr has free() defined. */
 void arr_remove(Dyn_arr* arr, size_t index);
 /* removes an element from the array, and returns it. */
