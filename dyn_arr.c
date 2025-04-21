@@ -98,14 +98,15 @@ void* arr_fetch(Dyn_arr* arr, size_t index){
 }
 /* linear searh looking for an equal element, using is_equal, which should return 0 on equality */
 size_t arr_find(Dyn_arr* arr, void* target, int(*is_equal)(void* a, void* b)){
+	size_t i = 0;
 	if (is_equal != NULL){
-		for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
+		for (i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
   		if (is_equal(target, arr->arr + i) == 0){
 				return i / arr->element_size;
 			}
 		}
 	} else {
-		for (size_t i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
+		for (i = 0; i < arr->length*arr->element_size; i+= arr->element_size){
 			if (memcmp(arr->arr + i, target, arr->element_size) == 0){
 				return i / arr->element_size;
 			}
@@ -129,7 +130,8 @@ void arr_print(Dyn_arr* arr, void (printer)(void*)){
 	printf("data of array at: %p \n length is %u and capacity is %u, elements occupy %u bytes.\n", (void*) arr, arr->length, arr->capacity, arr->element_size);
 	if (printer){
 		printf("data of it's contents at: %p\n [", arr->arr);
-		for (size_t i = 0; i < (arr->length-1)*arr->element_size; i+= arr->element_size){
+		size_t i = 0;
+		for (i = 0; i < (arr->length-1)*arr->element_size; i+= arr->element_size){
     	printer(arr->arr + i);
 			printf(", ");
   	}
